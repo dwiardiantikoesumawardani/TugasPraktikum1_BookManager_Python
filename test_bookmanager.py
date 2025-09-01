@@ -67,5 +67,19 @@ class TestBookManager(unittest.TestCase):
         with self.assertRaises(ValueError):
             Book("Title", "Author", 1999)
 
+    def test_find_books_by_year(self):
+        """Test mencari buku berdasarkan tahun"""
+        book1 = Book("Book A", "Author A", 2020)
+        book2 = Book("Book B", "Author B", 2020)
+        book3 = Book("Book C", "Author C", 2021)
+
+        self.book_manager.add_book(book1)
+        self.book_manager.add_book(book2)
+        self.book_manager.add_book(book3)
+
+        books_2020 = self.book_manager.find_books_by_year(2020)
+        self.assertEqual(2, len(books_2020))
+        self.assertTrue(all(book.year == 2020 for book in books_2020))
+
 if _name_ == '_main_':
-    unittest.main()
+    unittest.main(verbosity=2)

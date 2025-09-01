@@ -3,7 +3,7 @@ from book import Book
 
 class BookManager:
     def _init_(self):
-        self.books = []
+        self.books: List[Book] = []
     
     def add_book(self, book: Book) -> None:
         if book is None:
@@ -15,10 +15,11 @@ class BookManager:
             raise ValueError("Judul tidak boleh kosong")
 
         title_lower = title.strip().lower()
-        initial_count = len(self.books)
-        self.books = [book for book in self.books 
-                     if book.title.lower() != title_lower]
-        return len(self.books) < initial_count
+        for book in self.books:
+            if book.title.lower() == title_lower:
+                self.books.remove(book)
+                return True
+        return False
 
     def get_all_books(self) -> List[Book]:
         return self.books.copy()
@@ -28,13 +29,11 @@ class BookManager:
             raise ValueError("Penulis tidak boleh kosong")
 
         author_lower = author.strip().lower()
-        return [book for book in self.books 
-                if book.author.lower() == author_lower]
+        return [book for book in self.books if book.author.lower() == author_lower]
 
     def find_books_by_year(self, year: int) -> List[Book]:
         if year < 2000 or year > 2100:
             raise ValueError("Tahun hanya bisa diisi dari tahun 2000 sampai 2100")
-
         return [book for book in self.books if book.year == year]
 
     def get_book_count(self) -> int:
